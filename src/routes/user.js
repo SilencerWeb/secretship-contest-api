@@ -10,16 +10,23 @@ const User = mongoose.model('User');
 // Create user
 router.post('/user', async (request, response) => {
   const userId = request.body.id;
-  if (!userId) throw Error(`id wasn't provided`);
+  if (!userId) {
+    return response.status(400).send({
+      message: `id wasn't provided`,
+    });
+  }
 
   const user = await User.findOne({ id: userId });
-  if (user) throw Error(`User with id ${userId} already exists`);
+  if (user) {
+    return response.status(400).send({
+      message: `User with id ${userId} already exists`,
+    });
+  }
 
   const userData = {
     ...getUserDataFromRequestBody(request.body),
     created: Date.now(),
   };
-  if (!userData.first_name) throw Error(`first_name wasn't provided`);
 
   const createdUser = await User.create(userData);
   response.send(getCleanUserObject(createdUser));
@@ -28,10 +35,18 @@ router.post('/user', async (request, response) => {
 // Update user
 router.put('/user', async (request, response) => {
   const userId = request.body.id;
-  if (!userId) throw Error(`id wasn't provided`);
+  if (!userId) {
+    return response.status(400).send({
+      message: `id wasn't provided`,
+    });
+  }
 
   const user = await User.findOne({ id: userId });
-  if (!user) throw Error(`User with id ${userId} does not exist`);
+  if (!user) {
+    return response.status(400).send({
+      message: `User with id ${userId} does not exist`,
+    });
+  }
 
   const userData = getUserDataFromRequestBody(request.body);
 
@@ -46,10 +61,18 @@ router.put('/user', async (request, response) => {
 // Get user
 router.get('/user', async (request, response) => {
   const userId = request.body.id;
-  if (!userId) throw Error(`id wasn't provided`);
+  if (!userId) {
+    return response.status(400).send({
+      message: `id wasn't provided`,
+    });
+  }
 
   const user = await User.findOne({ id: userId });
-  if (!user) throw Error(`User with id ${userId} does not exist`);
+  if (!user) {
+    return response.status(400).send({
+      message: `User with id ${userId} does not exist`,
+    });
+  }
 
   response.send(getCleanUserObject(user));
 });

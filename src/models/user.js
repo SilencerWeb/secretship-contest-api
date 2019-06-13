@@ -7,7 +7,11 @@ const userSchema = new mongoose.Schema({
   first_name: { type: String, required: true },
   last_name: String,
   username: String,
-  avatarUrl: String,
+  avatar: {
+    url: String,
+    file_id: String,
+  },
+  language_code: String,
   created: { type: Date, default: Date.now() },
 });
 
