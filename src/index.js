@@ -11,6 +11,9 @@ const isProduction = process.env.NODE_ENV === 'production';
 // Enabling CORS
 app.use(cors());
 
+// Setting up Morgan
+app.use(require('morgan')('dev'));
+
 // Setting up body parser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
