@@ -5,10 +5,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 
-const isProduction = process.env.NODE_ENV === 'production';
-
-
 const app = express();
+const isProduction = process.env.NODE_ENV === 'production';
 
 // Enabling CORS
 app.use(cors());

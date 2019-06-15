@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const router = require('express').Router();
-const { getUserDataFromRequestBody } = require('../utils/get-user-data-from-request-body');
-const { getCleanUserObject } = require('../utils/get-clean-user-object');
+const { getUserDataFromRequestBody, getCleanUserObject } = require('../utils');
 
 
 const User = mongoose.model('User');
@@ -29,7 +28,7 @@ router.post('/user', async (request, response) => {
   };
 
   const createdUser = await User.create(userData);
-  response.send(getCleanUserObject(createdUser));
+  return response.send(getCleanUserObject(createdUser));
 });
 
 // Update user
@@ -54,7 +53,7 @@ router.put('/user', async (request, response) => {
 
   if (userUpdateResponse.ok === 1) {
     const user = await User.findOne({ id: userId });
-    response.send(getCleanUserObject(user));
+    return response.send(getCleanUserObject(user));
   }
 });
 
@@ -74,7 +73,7 @@ router.get('/user', async (request, response) => {
     });
   }
 
-  response.send(getCleanUserObject(user));
+  return response.send(getCleanUserObject(user));
 });
 
 

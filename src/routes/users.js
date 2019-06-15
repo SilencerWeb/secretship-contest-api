@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const router = require('express').Router();
-const { getCleanUserObject } = require('../utils/get-clean-user-object');
+const { getCleanUserObject } = require('../utils');
 
 
 const User = mongoose.model('User');
@@ -14,7 +14,7 @@ router.get('/users', async (request, response) => {
     return getCleanUserObject(user);
   });
 
-  response.send(cleanUsers);
+  return response.send(cleanUsers);
 });
 
 
