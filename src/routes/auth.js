@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
-const { checkSignature } = require('../utils');
+const { checkSignature, convertUnixTimestampIntoDate } = require('../utils');
 const { SECRET_KEY } = require('../constants');
 
 const User = mongoose.model('User');
@@ -12,7 +12,17 @@ router.post('/login', async (request, response) => {
 
   if (!shouldUserBeAuthorized) {
     return response.status(400).send({
-      message: 'Authorization error',
+      message: 'Data is not from Telegram',
+    });
+  }
+
+  const authDate = convertUnixTimestampIntoDate(request.body.auth_date);
+  const timeDifference = Date.now() - authDate;
+  const allowedTimeDifference = 30000; // 30000ms = 5min
+
+  if (timeDifference > allowedTimeDifference) {
+    return response.status(400).send({
+      message: 'Outdated data',
     });
   }
 
