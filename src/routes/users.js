@@ -14,7 +14,7 @@ router.get('/users', async (request, response) => {
     return getCleanUserObject(user);
   });
 
-  return response.send(cleanUsers);
+  return response.send({ users: cleanUsers });
 });
 
 

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const router = require('express').Router();
-const { getUserDataFromRequestBody, getCleanUserObject } = require('../utils');
+const { getUserDataFromRequestBody, getCleanUserObject, getUserIdFromAuthorizationHeader } = require('../utils');
 
 
 const User = mongoose.model('User');
@@ -28,7 +28,7 @@ router.post('/user', async (request, response) => {
   };
 
   const createdUser = await User.create(userData);
-  return response.send(getCleanUserObject(createdUser));
+  return response.send({ user: getCleanUserObject(createdUser) });
 });
 
 // Update user
@@ -53,7 +53,7 @@ router.put('/user', async (request, response) => {
 
   if (userUpdateResponse.ok === 1) {
     const user = await User.findOne({ id: userId });
-    return response.send(getCleanUserObject(user));
+    return response.send({ user: getCleanUserObject(user) });
   }
 });
 
@@ -73,7 +73,27 @@ router.get('/user', async (request, response) => {
     });
   }
 
-  return response.send(getCleanUserObject(user));
+  return response.send({ user: getCleanUserObject(user) });
+});
+
+// Get authorized user
+router.get('/me', async (request, response) => {
+  const authorizationHeader = request.headers.authorization;
+  if (!authorizationHeader) {
+    return response.status(400).send({
+      message: 'Not authorized',
+    });
+  }
+
+  const userId = getUserIdFromAuthorizationHeader(authorizationHeader);
+  const user = await User.findOne({ id: userId });
+  if (!user) {
+    return response.status(400).send({
+      message: `User with id ${userId} does not exist`,
+    });
+  }
+
+  return response.send({ user: getCleanUserObject(user) });
 });
 
 
