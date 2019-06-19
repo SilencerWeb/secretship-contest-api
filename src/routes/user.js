@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const router = require('express').Router();
+const { setUpRouteCors } = require('../set-up-route-cors');
 const { getUserDataFromRequestBody, getCleanUserObject, getUserIdFromAuthorizationHeader } = require('../utils');
 
 
@@ -7,7 +8,7 @@ const User = mongoose.model('User');
 
 
 // Create user
-router.post('/user', async (request, response) => {
+router.post('/user', setUpRouteCors(), async (request, response) => {
   const userId = request.body.id;
   if (!userId) {
     return response.status(400).send({
@@ -32,7 +33,7 @@ router.post('/user', async (request, response) => {
 });
 
 // Update user
-router.put('/user', async (request, response) => {
+router.put('/user', setUpRouteCors(), async (request, response) => {
   const userId = request.body.id;
   if (!userId) {
     return response.status(400).send({
@@ -58,7 +59,7 @@ router.put('/user', async (request, response) => {
 });
 
 // Get user
-router.get('/user', async (request, response) => {
+router.get('/user', setUpRouteCors(), async (request, response) => {
   const userId = request.body.id;
   if (!userId) {
     return response.status(400).send({
@@ -77,7 +78,7 @@ router.get('/user', async (request, response) => {
 });
 
 // Get authorized user
-router.get('/me', async (request, response) => {
+router.get('/me', setUpRouteCors(), async (request, response) => {
   const authorizationHeader = request.headers.authorization;
   if (!authorizationHeader) {
     return response.status(400).send({

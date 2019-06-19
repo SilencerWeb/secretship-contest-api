@@ -6,7 +6,6 @@ const bodyParser = require('body-parser');
 
 
 const app = express();
-const isProduction = process.env.NODE_ENV === 'production';
 
 // Enabling CORS
 app.use(cors());
@@ -19,12 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Setting up database
-if (isProduction) {
-  mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
-} else {
-  mongoose.connect('mongodb://localhost:27017/secretship-contest', { useNewUrlParser: true });
-  mongoose.set('debug', true);
-}
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
 
 // Setting up models
 require('./models/user');

@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
+const { setUpRouteCors } = require('../set-up-route-cors');
 const { checkSignature, convertUnixTimestampIntoDate } = require('../utils');
 const { SECRET_KEY } = require('../constants');
+
 
 const User = mongoose.model('User');
 
 
-router.post('/login', async (request, response) => {
+router.post('/login', setUpRouteCors(), async (request, response) => {
   const shouldUserBeAuthorized = checkSignature(request.body);
 
   if (!shouldUserBeAuthorized) {
@@ -42,7 +44,7 @@ router.post('/login', async (request, response) => {
   return response.send({ user, token });
 });
 
-router.post('/verifyToken', (request, response) => {
+router.post('/verifyToken', setUpRouteCors(), (request, response) => {
   const { token } = request.body;
 
   try {
